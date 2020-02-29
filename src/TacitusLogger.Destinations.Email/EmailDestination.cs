@@ -49,6 +49,21 @@ namespace TacitusLogger.Destinations.Email
             : this(smtpClient, fromAddress, new EmailListRecipientProvider(recipients), new SimpleTemplateLogSerializer(), new ExtendedTemplateLogSerializer(), null)
         {
 
+        } 
+        public EmailDestination(SmtpClient smtpClient, MailboxAddress fromAddress, IRecipientProvider recipientProvider)
+            : this(smtpClient, fromAddress, recipientProvider, new SimpleTemplateLogSerializer(), new ExtendedTemplateLogSerializer(), null)
+        {
+
+        } 
+        public EmailDestination(SmtpClient smtpClient, MailboxAddress fromAddress, IRecipientProvider recipientProvider, ILogSerializer mailSubjectGenerator)
+            : this(smtpClient, fromAddress, recipientProvider, mailSubjectGenerator, new ExtendedTemplateLogSerializer(), null)
+        {
+
+        } 
+        public EmailDestination(SmtpClient smtpClient, MailboxAddress fromAddress, IRecipientProvider recipientProvider, ILogSerializer mailSubjectGenerator, ILogSerializer mailBodyGenerator)
+            : this(smtpClient, fromAddress, recipientProvider, mailSubjectGenerator, mailBodyGenerator, null)
+        {
+
         }
 
         /// <summary>
