@@ -20,7 +20,7 @@ PM> Install-Package TacitusLogger.Destinations.Email
 ## Examples
 
 ### Adding email destination with minimal configuration
-With builders:
+Using builders:
 ```cs
 var logger = LoggerBuilder.Logger()
                           .ForAllLogs()
@@ -40,7 +40,7 @@ logger.AddLogDestinations(emailDestination);
 ```
 ---
 ### With several recipients
-With builders:
+Using builders:
 ```cs
 var recipients = new string[] 
 {
@@ -72,7 +72,7 @@ logger.AddLogDestinations(emailDestination);
 ```
 ---
 ### With recipients function
-With builders:
+Using builders:
 ```cs
 LogModelFunc<ICollection<string>> recipientsFunc = (logModel) =>
 {
@@ -106,7 +106,7 @@ logger.AddLogDestinations(emailDestination);
 ```
 ---
 ### With custom recipient provider
-With builders:
+Using builders:
 ```cs
 IRecipientProvider customRecipientProvider = new Mock<IRecipientProvider>().Object;
 var logger = LoggerBuilder.Logger()
@@ -128,7 +128,7 @@ logger.AddLogDestinations(emailDestination);
 ```
 ---
 ### With mailbox address
-With builders:
+Using builders:
 ```cs
 MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
 var logger = LoggerBuilder.Logger()
@@ -141,7 +141,7 @@ var logger = LoggerBuilder.Logger()
 ```
 ---
 ### With custom subject body and attachment templates
-With builders:
+Using builders:
 ```cs
 var logger = LoggerBuilder.Logger()
                           .ForAllLogs()
@@ -173,7 +173,7 @@ logger.AddLogDestinations(emailDestination);
 ```
 ---
 ### With custom body and attachment templates and json serializer settings
-With builders:
+Using builders:
 ```cs
 var jsonSerializerSettings = new JsonSerializerSettings();
 var logger = LoggerBuilder.Logger()
@@ -207,7 +207,7 @@ logger.AddLogDestinations(emailDestination);
 ```
 ---
 ### With custom subject body and attachment serializers
-With builders:
+Using builders:
 ```cs
 ILogSerializer customSubjectSerializer = new Mock<ILogSerializer>().Object;
 ILogSerializer customBodySerializer = new Mock<ILogSerializer>().Object;
@@ -243,7 +243,7 @@ logger.AddLogDestinations(emailDestination);
 ```
 ---
 ### With custom subject text function 
-With builders:
+Using builders:
 ```cs
 var logger = LoggerBuilder.Logger()
                           .ForAllLogs()
