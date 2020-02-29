@@ -147,6 +147,7 @@ namespace TacitusLogger.Destinations.Email.UnitTests
             Assert.AreEqual(mailBodyGenerator, emailDestination.MailBodyGenerator);
             Assert.AreEqual(null, emailDestination.MailAttachmentGenerator);
         }
+
         [Test]
         public void Ctor_Taking_SmtpClient_And_FromAddress_And_RecipientsList_When_Called_Sets_Defaults_Correctly()
         {
@@ -208,7 +209,73 @@ namespace TacitusLogger.Destinations.Email.UnitTests
                 EmailDestination emailDestination = new EmailDestination(smtpClient, fromAddress, recipientsList);
             });
         }
-       
+
+        [Test]
+        public void Ctor_Taking_Smtp_Client_From_Address_Recipient_Provider_When_Called_Sets_Dependencies_Correctly()
+        {
+            //Arrange
+            SmtpClient smtpClient = new SmtpClient();
+            MailboxAddress fromAddress = new MailboxAddress("recipient@example.com");
+            IRecipientProvider recipientProvider = new Mock<IRecipientProvider>().Object;
+             
+            //Act
+            EmailDestination emailDestination = new EmailDestination(smtpClient, fromAddress, recipientProvider);
+
+            //Assert
+            Assert.AreEqual(smtpClient, emailDestination.SmtpClient);
+            Assert.AreEqual(fromAddress, emailDestination.From);
+            Assert.AreEqual(recipientProvider, emailDestination.RecipientProvider); 
+            Assert.IsInstanceOf<SimpleTemplateLogSerializer>(emailDestination.MailSubjectGenerator);
+            Assert.IsInstanceOf<ExtendedTemplateLogSerializer>(emailDestination.MailBodyGenerator);
+            Assert.IsNull(emailDestination.MailAttachmentGenerator);
+            Assert.IsInstanceOf<StandardSmtpClientFacade>(emailDestination.SmtpClientFacade);
+        }
+
+        [Test]
+        public void Ctor_Taking_Smtp_Client_From_Address_Recipient_Provider_Mail_Subject_Generator_When_Called_Sets_Dependencies_Correctly()
+        {
+            //Arrange
+            SmtpClient smtpClient = new SmtpClient();
+            MailboxAddress fromAddress = new MailboxAddress("recipient@example.com");
+            IRecipientProvider recipientProvider = new Mock<IRecipientProvider>().Object;
+            ILogSerializer mailSubjectGenerator = new Mock<ILogSerializer>().Object;
+
+            //Act
+            EmailDestination emailDestination = new EmailDestination(smtpClient, fromAddress, recipientProvider, mailSubjectGenerator);
+
+            //Assert
+            Assert.AreEqual(smtpClient, emailDestination.SmtpClient);
+            Assert.AreEqual(fromAddress, emailDestination.From);
+            Assert.AreEqual(recipientProvider, emailDestination.RecipientProvider);
+            Assert.AreEqual(mailSubjectGenerator, emailDestination.MailSubjectGenerator);
+            Assert.IsInstanceOf<ExtendedTemplateLogSerializer>(emailDestination.MailBodyGenerator);
+            Assert.IsNull(emailDestination.MailAttachmentGenerator);
+            Assert.IsInstanceOf<StandardSmtpClientFacade>(emailDestination.SmtpClientFacade);
+        }
+
+        [Test]
+        public void Ctor_Taking_Smtp_Client_From_Address_Recipient_Provider_Mail_Subject_Generator_Mail_Body_Generator_When_Called_Sets_Dependencies_Correctly()
+        {
+            //Arrange
+            SmtpClient smtpClient = new SmtpClient();
+            MailboxAddress fromAddress = new MailboxAddress("recipient@example.com");
+            IRecipientProvider recipientProvider = new Mock<IRecipientProvider>().Object;
+            ILogSerializer mailSubjectGenerator = new Mock<ILogSerializer>().Object;
+            ILogSerializer mailBodyGenerator = new Mock<ILogSerializer>().Object;
+
+            //Act
+            EmailDestination emailDestination = new EmailDestination(smtpClient, fromAddress, recipientProvider, mailSubjectGenerator, mailBodyGenerator);
+
+            //Assert
+            Assert.AreEqual(smtpClient, emailDestination.SmtpClient);
+            Assert.AreEqual(fromAddress, emailDestination.From);
+            Assert.AreEqual(recipientProvider, emailDestination.RecipientProvider);
+            Assert.AreEqual(mailSubjectGenerator, emailDestination.MailSubjectGenerator);
+            Assert.AreEqual(mailBodyGenerator, emailDestination.MailBodyGenerator);
+            Assert.IsNull(emailDestination.MailAttachmentGenerator);
+            Assert.IsInstanceOf<StandardSmtpClientFacade>(emailDestination.SmtpClientFacade);
+        }
+
         #endregion
 
         #region Tests for Send method
