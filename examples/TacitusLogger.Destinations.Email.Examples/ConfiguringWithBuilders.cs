@@ -123,18 +123,7 @@ namespace TacitusLogger.Destinations.Email.Examples
                                           .WithAttachment(customAttachmentSerializer)
                                           .Add()
                                       .BuildLogger();
-        }
-        public void Adding_Email_Destination_With_Custom_Subject()
-        {
-            var logger = LoggerBuilder.Logger()
-                                      .ForAllLogs()
-                                      .Email()
-                                          .WithRecipients("recipient@example.com")
-                                          .WithSmtpClient(mailKitSmtpClient, "sender@example.com")
-                                          .WithSubject(m => $"Notification from logger {m.Source}: {m.LogType} - {m.Description}")
-                                          .Add()
-                                      .BuildLogger();
-        }
+        } 
         public void Adding_Email_Destination_With_Custom_Subject_Text_Function()
         {
             var logger = LoggerBuilder.Logger()

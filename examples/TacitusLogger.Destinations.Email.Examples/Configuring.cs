@@ -1,9 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
 using Moq;
-using Newtonsoft.Json; 
-using System.Collections.Generic;
-using TacitusLogger.Builders;
+using Newtonsoft.Json;
 using TacitusLogger.Serializers;
 
 namespace TacitusLogger.Destinations.Email.Examples
@@ -20,7 +18,7 @@ namespace TacitusLogger.Destinations.Email.Examples
             EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient, fromAddress, "recipient@example.com");
 
             Logger logger = new Logger();
-            logger.AddLogDestinations(emailDestination); 
+            logger.AddLogDestinations(emailDestination);
 
         }
         public void Adding_Email_Destination_With_Several_Recipients()
@@ -30,7 +28,7 @@ namespace TacitusLogger.Destinations.Email.Examples
                 "recipient@example.com",
                 "recipient@example.com",
                 "recipient@example.com"
-            }; 
+            };
             MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
             EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient, fromAddress, recipients);
 
@@ -39,28 +37,28 @@ namespace TacitusLogger.Destinations.Email.Examples
         }
         public void Adding_Email_Destination_With_Recipients_Function()
         {
-            //FactoryMethodRecipientProvider factoryMethodRecipientProvider = new FactoryMethodRecipientProvider((logModel) =>
-            //{
-            //    if (logModel.LogTypeIsIn(LogType.Error, LogType.Failure, LogType.Critical))
-            //        return new string[] { "recipient1@example.com" };
-            //    else
-            //        return new string[] { "recipient2@example.com" };
-            //});
-            //MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
-            //EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient, fromAddress, factoryMethodRecipientProvider);
+            FactoryMethodRecipientProvider factoryMethodRecipientProvider = new FactoryMethodRecipientProvider((logModel) =>
+            {
+                if (logModel.LogTypeIsIn(LogType.Error, LogType.Failure, LogType.Critical))
+                    return new string[] { "recipient1@example.com" };
+                else
+                    return new string[] { "recipient2@example.com" };
+            });
+            MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
+            EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient, fromAddress, factoryMethodRecipientProvider);
 
-            //Logger logger = new Logger();
-            //logger.AddLogDestinations(emailDestination);
+            Logger logger = new Logger();
+            logger.AddLogDestinations(emailDestination);
         }
         public void Adding_Email_Destination_With_Custom_Recipient_Provider()
         {
-            //IRecipientProvider customRecipientProvider = new Mock<IRecipientProvider>().Object;
-            //MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
-            //EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient, fromAddress, customRecipientProvider);
+            IRecipientProvider customRecipientProvider = new Mock<IRecipientProvider>().Object;
+            MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
+            EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient, fromAddress, customRecipientProvider);
 
-            //Logger logger = new Logger();
-            //logger.AddLogDestinations(emailDestination);
-        } 
+            Logger logger = new Logger();
+            logger.AddLogDestinations(emailDestination);
+        }
         public void Adding_Email_Destination_With_Custom_Subject_Body_And_Attachment_Templates()
         {
             EmailListRecipientProvider emailListRecipientProvider = new EmailListRecipientProvider("recipient@example.com");
@@ -70,17 +68,17 @@ namespace TacitusLogger.Destinations.Email.Examples
             MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
 
             EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient,
-                                                                     fromAddress, 
-                                                                     emailListRecipientProvider, 
-                                                                     subjectTextSerializer, 
-                                                                     bodyLogSerializer, 
+                                                                     fromAddress,
+                                                                     emailListRecipientProvider,
+                                                                     subjectTextSerializer,
+                                                                     bodyLogSerializer,
                                                                      attachmentLogSerializer);
             Logger logger = new Logger();
             logger.AddLogDestinations(emailDestination);
         }
         public void Adding_Email_Destination_With_Custom_Body_And_Attachment_Templates_And_JsonSettings()
         {
-            var jsonSerializerSettings = new JsonSerializerSettings(); 
+            var jsonSerializerSettings = new JsonSerializerSettings();
             EmailListRecipientProvider emailListRecipientProvider = new EmailListRecipientProvider("recipient@example.com");
             SimpleTemplateLogSerializer subjectTextSerializer = new SimpleTemplateLogSerializer("Notification from logger $Source: $LogType - $Description");
             ExtendedTemplateLogSerializer bodyLogSerializer = new ExtendedTemplateLogSerializer(customBodyTemplate, jsonSerializerSettings);
@@ -100,7 +98,7 @@ namespace TacitusLogger.Destinations.Email.Examples
         {
             ILogSerializer customSubjectSerializer = new Mock<ILogSerializer>().Object;
             ILogSerializer customBodySerializer = new Mock<ILogSerializer>().Object;
-            ILogSerializer customAttachmentSerializer = new Mock<ILogSerializer>().Object; 
+            ILogSerializer customAttachmentSerializer = new Mock<ILogSerializer>().Object;
             MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
             EmailListRecipientProvider emailListRecipientProvider = new EmailListRecipientProvider("recipient@example.com");
 
@@ -113,13 +111,21 @@ namespace TacitusLogger.Destinations.Email.Examples
             Logger logger = new Logger();
             logger.AddLogDestinations(emailDestination);
         }
-        public void Adding_Email_Destination_With_Custom_Subject()
-        {
-    
-        }
         public void Adding_Email_Destination_With_Custom_Subject_Text_Function()
-        {
+        { 
+            GeneratorFunctionLogSerializer subjectTextFunction = new GeneratorFunctionLogSerializer(m =>
+            {
+                return $"Notification from logger {m.Source}: {m.LogType} - {m.Description}";
+            }); 
+            MailboxAddress fromAddress = new MailboxAddress("sender", "sender@example.com");
+            EmailListRecipientProvider emailListRecipientProvider = new EmailListRecipientProvider("recipient@example.com");
 
+            EmailDestination emailDestination = new EmailDestination(mailKitSmtpClient,
+                                                                     fromAddress,
+                                                                     emailListRecipientProvider,
+                                                                     subjectTextFunction);
+            Logger logger = new Logger();
+            logger.AddLogDestinations(emailDestination);
         }
     }
 }
