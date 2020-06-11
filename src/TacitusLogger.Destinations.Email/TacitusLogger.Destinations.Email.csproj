@@ -4,7 +4,17 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <Authors>Khanlar Mammadov</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
+    <Description>Extension destination for TacitusLogger that sends logs as emails using SMTP protocol.
+Attention: TacitusLogger.Destinations.Email is currently in Alpha phase. This means you should not use it in any production code.</Description>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/khanlarmammadov/TacitusLogger.Destinations.Email</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/khanlarmammadov/TacitusLogger.Destinations.Email</RepositoryUrl>
+    <PackageReleaseNotes>Attention: TacitusLogger.Destinations.Email is currently in Alpha phase. This means you should not use it in any production code.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard1.3\TacitusLogger.Destinations.Email.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
